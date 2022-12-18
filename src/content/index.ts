@@ -31,5 +31,13 @@ function getStreamersFromHTML(): string[] {
     return self.indexOf(value) === index;
   }
 
-  return matches.filter(uniqueOnly).map((url) => "https://www." + url);
+  return matches
+    .filter(uniqueOnly)
+    .map((url) => url.split("twitch.tv/")[1])
+    .filter((streamer) => !removeList[streamer]);
 }
+
+const removeList = {
+  "": true,
+  gql: true,
+};

@@ -1,27 +1,34 @@
 <script lang="ts">
     import { log } from "src/utils/logging";
+    import Streamer from "src/components/Streamer.svelte";
+    import { getTwitchUsers, type TwitchUser } from "src/utils/twitch-api";
 
-    let list: string[] = [];
+    let list: TwitchUser[] = [];
 
-    // TODO: connect this with the page for realtime updates
     log("mounted, request_list")
+
     chrome.runtime.sendMessage({
         name: "request_list",
-    }, (streamerList) => {
+    }, async (streamerList) => {
         log("mounted, setting list")
+
         if (streamerList) {
-            list = streamerList;
+            const users = await getTwitchUsers(streamerList);
+            log('mounted, fetched users', users);
+
+            list = streamerList.map((streamer) => {
+                return users.data[streamer];
+            })
         }
     });
 </script>
 
 <div class="container">
-    Twitch Streamers on this page:
     <div>
         {#each list as streamer}
-            <div>{streamer}</div>
+            <Streamer {streamer}/>
         {:else}
-            None on the page!
+            No Twitch streamers detected on this page :(
         {/each}
     </div>
 </div>
