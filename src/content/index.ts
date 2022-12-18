@@ -11,12 +11,14 @@ function sendListToBackground() {
   });
 }
 
-chrome.runtime.onMessage.addListener((message) => {
+chrome.runtime.onMessage.addListener(async (message) => {
   if (message.name !== "check_for_streamers") {
-    return;
+    return true;
   }
 
   sendListToBackground();
+
+  return true;
 });
 
 function getStreamersFromHTML(): string[] {

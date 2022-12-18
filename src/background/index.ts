@@ -1,6 +1,5 @@
 import { log } from "src/utils/logging";
-
-export {}; // For the linter
+import { getTwitchUsers } from "src/utils/twitch-api";
 
 let streamerList = [];
 /**
@@ -12,6 +11,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (tab.active && changeInfo.status === "complete") {
     triggerStreamerCheck(tabId);
   }
+
+  return true;
 });
 
 /**
@@ -19,6 +20,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
  */
 chrome.tabs.onActivated.addListener((activeInfo) => {
   triggerStreamerCheck(activeInfo.tabId);
+
+  return true;
 });
 
 /**
@@ -33,27 +36,46 @@ function triggerStreamerCheck(tabId: number) {
 }
 
 /**
- * When we receive a new check, update our icon and local vars
+ * Handles messages sent from the popup and inject scripts
  */
-chrome.runtime.onMessage.addListener((message, sender, response) => {
+chrome.runtime.onMessage.addListener((message, _sender, response) => {
   switch (message.name) {
     case "streamer_list": {
-      log("background receiving streamerList", streamerList);
+      log("background streamer_list", streamerList);
 
       streamerList = message.streamerList;
       updateIcon(message.streamerList.length !== 0);
       return;
     }
     case "request_list": {
-      response(streamerList);
-      return;
+      log("background request_list", streamerList);
+
+      try {
+        getTwitchUsers(streamerList).then((streamersData) => {
+          const parsedUsers = streamerList.map((streamer) => {
+            return streamersData.data[streamer];
+          });
+
+          log("background request_list resp", parsedUsers);
+
+          response(parsedUsers);
+        });
+      } catch (err) {
+        response([]);
+        throw err;
+      }
     }
     default: {
       // no-op
     }
   }
+
+  return true;
 });
 
+/**
+ * Update our icon to show if there are Twitch streamers present on the current page
+ */
 function updateIcon(showing: boolean) {
   chrome.action.setIcon({
     path: `src/assets/icons/stream_${showing ? "on" : "off"}_16.png`,

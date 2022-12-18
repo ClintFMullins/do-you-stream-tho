@@ -1,7 +1,5 @@
-import { log } from "./logging";
-
-export async function getTwitchUsers(users: string[]) {
-  const rawResp = await fetch("https://gql.twitch.tv/gql", {
+export function getTwitchUsers(users: string[]) {
+  return fetch("https://gql.twitch.tv/gql", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,15 +11,8 @@ export async function getTwitchUsers(users: string[]) {
               ${users.map(eachUser).join("\n")}
           }
       `,
-      variables: {},
     }),
-  });
-
-  const jsonResp = await rawResp.json();
-
-  log("getTwitchUsers", jsonResp);
-
-  return jsonResp;
+  }).then((resp) => resp.json());
 }
 
 export interface TwitchUser {
