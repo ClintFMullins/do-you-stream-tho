@@ -33,8 +33,9 @@
       "32": "src/assets/icons/stream_off_32.png",
       "48": "src/assets/icons/get_started48.png",
       "128": "src/assets/icons/get_started128.png"
-    }
+    },
+    "permissions": ["background"]
   },
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab", "scripting", "background"],
   "host_permissions": ["https://*.youtube.com/"]
 }

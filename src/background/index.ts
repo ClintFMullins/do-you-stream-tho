@@ -1,20 +1,28 @@
+let streamerList = [];
+
 /**
  * Listen for URL updates, trigger a new check
  */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  console.debug("updated", tabId, changeInfo, tab);
+  console.log("updated", tabId, changeInfo, tab);
 
   if (tab.active && changeInfo.status === "complete") {
     triggerStreamerCheck(tabId);
   }
 });
 
+/**
+ * Listen for active tab updates, trigger a new check
+ */
 chrome.tabs.onActivated.addListener((activeInfo) => {
   triggerStreamerCheck(activeInfo.tabId);
 });
 
+/**
+ * Send a message that triggers a new check
+ */
 function triggerStreamerCheck(tabId: number) {
-  console.debug("sending check request");
+  console.log("sending check request");
 
   chrome.tabs.sendMessage(tabId, {
     name: "check_for_streamers",
@@ -25,14 +33,22 @@ function triggerStreamerCheck(tabId: number) {
  * When we receive a new check, update our icon and local vars
  */
 chrome.runtime.onMessage.addListener((message, sender, response) => {
-  if (message.name !== "streamer_list") {
-    return;
+  switch (message.name) {
+    case "streamer_list": {
+      console.log("background receiving streamerList", streamerList);
+
+      streamerList = message.streamerList;
+      updateIcon(message.streamerList.length !== 0);
+      return;
+    }
+    case "request_list": {
+      response(streamerList);
+      return;
+    }
+    default: {
+      // no-op
+    }
   }
-
-  updateIcon(message.streamerList.length !== 0);
-
-  //TODO inform
-  console.debug("background receiving streamerList", message.streamerList);
 });
 
 function updateIcon(showing: boolean) {

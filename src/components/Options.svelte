@@ -3,7 +3,16 @@
 
     let list: string[] = [];
     onMount(() => {
-        console.log(chrome.extension.getBackgroundPage())
+        // TODO: connect this with the page for realtime updates
+        console.log("mounted, request_list")
+        chrome.runtime.sendMessage({
+            name: "request_list",
+        }, (streamerList) => {
+            console.log("mounted, setting list")
+            if (streamerList) {
+                list = streamerList;
+            }
+        });
     })
 </script>
 
