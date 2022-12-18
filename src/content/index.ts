@@ -1,20 +1,23 @@
-import { storage } from "src/storage";
+function sendListToBackground() {
+  const streamerList = getStreamersFromHTML();
 
-let lastUrl = "";
+  console.log("page, sending list", streamerList);
 
-storage.set({ streamerList: parseBody() });
+  chrome.runtime.sendMessage({
+    name: "streamer_list",
+    streamerList,
+  });
+}
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-  if (request.message === "url_update") {
-    if (request.url !== lastUrl) {
-      lastUrl = request.url;
-      console.log(parseBody());
-      storage.set({ streamerList: parseBody() });
-    }
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.name !== "check_for_streamers") {
+    return;
   }
+
+  sendListToBackground();
 });
 
-function parseBody(): string[] {
+function getStreamersFromHTML(): string[] {
   const desc = document.body.outerHTML;
   const matches = desc.match(/twitch.tv\/\w*/g);
 
