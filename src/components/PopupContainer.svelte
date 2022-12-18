@@ -1,9 +1,9 @@
 <script>
   import { QueryClientProvider } from '@sveltestack/svelte-query'
 
-  import Options from './Options.svelte'
+  import StreamerList from './StreamerList.svelte'
 </script>
 
 <QueryClientProvider>
-  <Options />
+  <StreamerList />
 </QueryClientProvider>

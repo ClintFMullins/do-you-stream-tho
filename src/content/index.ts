@@ -1,7 +1,9 @@
+import { log } from "src/utils/logging";
+
 function sendListToBackground() {
   const streamerList = getStreamersFromHTML();
 
-  console.log("page, sending list", streamerList);
+  log("page, sending list", streamerList);
 
   chrome.runtime.sendMessage({
     name: "streamer_list",
