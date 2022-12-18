@@ -1,5 +1,3 @@
-import { storage } from "../storage";
-
 chrome.tabs.onUpdated.addListener(
   async (
     id: number,
