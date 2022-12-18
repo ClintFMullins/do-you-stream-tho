@@ -1,10 +1,24 @@
 <script lang="ts">
+    import { storage } from "src/storage";
+    import { onMount } from "svelte";
 
+    let list: string[] = [];
+    onMount(() => {
+        storage.get().then((istor) =>{
+            list = istor.streamerList;
+        });
+    })
 </script>
 
 <div class="container">
     Twitch Streamers on this page:
-    (they go here)
+    <div>
+        {#each list as streamer}
+            {streamer}
+        {:else}
+            None on the page!
+        {/each}
+    </div>
 </div>
 
 <style>
