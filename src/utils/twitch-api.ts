@@ -1,3 +1,6 @@
+// TODO: now that fetching works, remove a bunch of "return true"
+// from random places
+
 export function getTwitchUsers(users: string[]) {
   return fetch("https://gql.twitch.tv/gql", {
     method: "POST",

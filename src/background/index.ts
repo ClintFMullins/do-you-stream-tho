@@ -6,7 +6,7 @@ let streamerList = [];
  * Listen for URL updates, trigger a new check
  */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  log("updated", tabId, changeInfo, tab);
+  // log("updated", tabId, changeInfo, tab);
 
   if (tab.active && changeInfo.status === "complete") {
     triggerStreamerCheck(tabId);
@@ -52,9 +52,11 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
 
       try {
         getTwitchUsers(streamerList).then((streamersData) => {
-          const parsedUsers = streamerList.map((streamer) => {
-            return streamersData.data[streamer];
-          });
+          const parsedUsers = streamerList
+            .map((streamer) => {
+              return streamersData.data[streamer];
+            })
+            .filter((streamer) => !streamer);
 
           log("background request_list resp", parsedUsers);
 

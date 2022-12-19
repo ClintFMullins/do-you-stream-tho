@@ -21,21 +21,22 @@ chrome.runtime.onMessage.addListener(async (message) => {
   return true;
 });
 
+const TWITCH_URL = "https://twitch.tv/";
+
 function getStreamersFromHTML(): string[] {
-  const desc = document.body.outerHTML;
-  const matches = desc.match(/twitch.tv\/\w*/g);
-
-  if (!matches) {
-    return [];
-  }
-
+  console.log("we trying");
   function uniqueOnly(value, index, self) {
     return self.indexOf(value) === index;
   }
 
-  return matches
+  return Array.from(document.getElementsByTagName("a"))
+    .map((link) => link.innerText ?? "")
+    .filter((text) => text.includes(TWITCH_URL))
+    .map((text) => {
+      const matches = text.match(/https:\/\/twitch.tv\/\w*/) ?? [];
+      return matches[0].slice(TWITCH_URL.length);
+    })
     .filter(uniqueOnly)
-    .map((url) => url.split("twitch.tv/")[1])
     .filter((streamer) => !removeList[streamer]);
 }
 

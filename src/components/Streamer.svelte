@@ -10,3 +10,7 @@
   </a>
   Live: {streamer.stream?.id ? "true" : "false"}
 </div>
+
+<style>
+  
+</style>
