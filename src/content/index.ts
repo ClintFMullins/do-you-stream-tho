@@ -23,21 +23,25 @@ chrome.runtime.onMessage.addListener(async (message) => {
 
 const TWITCH_URL_FRAGMENT = "twitch.tv/";
 
+/**
+ * Using 'a tags' to attempt some validation, that it's not random
+ * user comment twitch spam
+ */
 function getStreamersFromHTML(): string[] {
-  function uniqueOnly(value, index, self) {
-    return self.indexOf(value) === index;
-  }
-
   return Array.from(document.getElementsByTagName("a"))
-    .map((link) => link.innerText ?? "")
-    .filter((text) => text.includes(TWITCH_URL_FRAGMENT))
-    .map((text) => {
-      const matches = text.match(/twitch.tv\/\w*/) ?? [];
+    .map(extractTwitchMatch)
+    .filter(uniqueAndValid);
+}
 
-      return matches?.[0].slice(TWITCH_URL_FRAGMENT.length) ?? "";
-    })
-    .filter(uniqueOnly)
-    .filter((streamer) => !removeList[streamer]);
+function uniqueAndValid(streamer, index, self) {
+  return !removeList[streamer] && self.indexOf(streamer) === index;
+}
+
+function extractTwitchMatch(link: HTMLAnchorElement) {
+  const text = link.innerText ?? "";
+  const matches = text.match(/twitch.tv\/\w*/) ?? [];
+
+  return matches?.[0]?.slice(TWITCH_URL_FRAGMENT.length).toLowerCase() ?? "";
 }
 
 const removeList = {
