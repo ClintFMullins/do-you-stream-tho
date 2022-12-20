@@ -23,6 +23,7 @@ export interface TwitchUser {
   id: string;
   login: string;
   displayName: string;
+  profileImageURL: string;
   stream: {
     id: string | null;
   };
@@ -34,10 +35,9 @@ function eachUser(user: string) {
       id
       login
       displayName
+      profileImageURL(width: 70)
       stream {
         id
       }
   }`;
 }
-
-// profileImageURL(width: 70)

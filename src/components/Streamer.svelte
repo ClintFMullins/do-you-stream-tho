@@ -6,11 +6,13 @@
 
 <div>
   <a target="_blank" rel="noreferrer" href={`https://www.twitch.tv/${streamer.login}`}>
-    {streamer.displayName}
+    <img src={streamer.profileImageURL} />{streamer.displayName}
   </a>
   Live: {streamer.stream?.id ? "true" : "false"}
 </div>
 
 <style>
-  
+  img {
+    border-radius: 100%;
+  }
 </style>
