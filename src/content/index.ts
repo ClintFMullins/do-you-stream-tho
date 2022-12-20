@@ -21,7 +21,7 @@ chrome.runtime.onMessage.addListener(async (message) => {
   return true;
 });
 
-const TWITCH_URL = "https://twitch.tv/";
+const TWITCH_URL_FRAGMENT = "twitch.tv/";
 
 function getStreamersFromHTML(): string[] {
   function uniqueOnly(value, index, self) {
@@ -30,10 +30,10 @@ function getStreamersFromHTML(): string[] {
 
   return Array.from(document.getElementsByTagName("a"))
     .map((link) => link.innerText ?? "")
-    .filter((text) => text.includes(TWITCH_URL))
+    .filter((text) => text.includes(TWITCH_URL_FRAGMENT))
     .map((text) => {
-      const matches = text.match(/https:\/\/twitch.tv\/\w*/) ?? [];
-      return matches[0].slice(TWITCH_URL.length);
+      const matches = text.match(/twitch.tv\/\w*/) ?? [];
+      return matches[0].slice(TWITCH_URL_FRAGMENT.length);
     })
     .filter(uniqueOnly)
     .filter((streamer) => !removeList[streamer]);
