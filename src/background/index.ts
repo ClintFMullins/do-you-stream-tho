@@ -65,7 +65,7 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
           .then((streamersData) => {
             const parsedUsers = streamerList
               .map((streamer) => {
-                return streamersData.data[streamer];
+                return streamersData.data?.[streamer] ?? null;
               })
               .filter((streamer) => !!streamer);
 

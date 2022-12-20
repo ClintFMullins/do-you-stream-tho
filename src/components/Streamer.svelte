@@ -2,35 +2,54 @@
   import type { TwitchUser } from "src/utils/twitch-api";
 
   export let streamer: TwitchUser;
+  const formatter = Intl.NumberFormat("en", { notation: "compact" });
+
+  const isLive = !!streamer.stream?.id;
 </script>
 
-<div>
+<div class="cont">
   <a
     target="_blank"
     rel="noreferrer"
     href={`https://www.twitch.tv/${streamer.login}`}
   >
-    <img
-      class:live={!!streamer.stream?.id}
-      src={streamer.profileImageURL}
-      alt=""
-    />
+    <img class:live={isLive} src={streamer.profileImageURL} alt="" />
     <div class="middle">
       <div class="name">
         {streamer.displayName}
       </div>
-      <div class="activity">Overwatch 2</div>
+      <div class="activity">
+        {#if isLive}
+          {streamer.stream.game.displayName}
+        {:else}
+          Offline
+        {/if}
+      </div>
     </div>
     <div class="red-cont">
-      <div>
-        <div class="red" />
-        6.5k
-      </div>
+      {#if isLive}
+        <div>
+          <div class="red" />
+          {formatter.format(streamer.stream.viewersCount)}
+        </div>
+      {/if}
     </div>
   </a>
 </div>
 
 <style>
+  .cont {
+    margin-bottom: 5px;
+    opacity: 0.9;
+    padding: 2px;
+    border-radius: 3px;
+  }
+
+  .cont:hover {
+    opacity: 1;
+    background-color: #1f1f1f;
+  }
+
   a {
     display: flex;
   }
@@ -51,11 +70,11 @@
     border-radius: 100%;
     width: 40px;
     height: 40px;
-    border: solid 3px black;
+    border: solid 2px black;
   }
 
   .live {
-    border: solid 3px red;
+    border: solid 2px red;
   }
 
   .activity {
@@ -65,7 +84,6 @@
   .red {
     width: 10px;
     height: 10px;
-    font-size: 15px;
     background: red;
     border-radius: 100%;
     display: inline-block;
@@ -75,5 +93,6 @@
     display: flex;
     justify-content: end;
     align-items: center;
+    font-size: 13px;
   }
 </style>

@@ -26,6 +26,11 @@ export interface TwitchUser {
   profileImageURL: string;
   stream: {
     id: string | null;
+    viewersCount: number;
+    game: {
+      id: string | null;
+      displayName: string;
+    };
   };
 }
 
@@ -38,6 +43,11 @@ function eachUser(user: string) {
       profileImageURL(width: 70)
       stream {
         id
+        viewersCount
+        game {
+          id
+          displayName
+        }
       }
   }`;
 }

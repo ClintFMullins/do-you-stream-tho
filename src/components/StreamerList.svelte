@@ -30,7 +30,7 @@
   .container {
     min-width: 250px;
     background-color: black;
-    padding: 5px;
+    padding: 5px 5px 0 5px;
     border: 1px solid #575757;
   }
 </style>
