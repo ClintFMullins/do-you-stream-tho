@@ -1,30 +1,36 @@
 <script lang="ts">
-    import { log } from "src/utils/logging";
-    import Streamer from "src/components/Streamer.svelte";
-    import type { TwitchUser } from "src/utils/twitch-api";
+  import { log } from "src/utils/logging";
+  import Streamer from "src/components/Streamer.svelte";
+  import type { TwitchUser } from "src/utils/twitch-api";
 
-    let streamerList: TwitchUser[] = [];
+  let streamerList: TwitchUser[] = [];
 
-    chrome.runtime.sendMessage({
-        name: "request_list",
-    }, async (parsedStreamerList) => {
-        log("request_list resp", parsedStreamerList)
-        streamerList = parsedStreamerList;
-    });
+  chrome.runtime.sendMessage(
+    {
+      name: "request_list",
+    },
+    async (parsedStreamerList) => {
+      log("request_list resp", parsedStreamerList);
+      streamerList = parsedStreamerList;
+    }
+  );
 </script>
 
 <div class="container">
-    <div>
-        {#each streamerList as streamer}
-            <Streamer {streamer}/>
-        {:else}
-            No Twitch streamers detected on this page :(
-        {/each}
-    </div>
+  <div>
+    {#each streamerList as streamer}
+      <Streamer {streamer} />
+    {:else}
+      No Twitch streamers detected on this page :(
+    {/each}
+  </div>
 </div>
 
 <style>
-    .container {
-        min-width: 250px;
-    }
+  .container {
+    min-width: 250px;
+    background-color: black;
+    padding: 5px;
+    border: 1px solid #575757;
+  }
 </style>

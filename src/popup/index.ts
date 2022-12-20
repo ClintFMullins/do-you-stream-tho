@@ -1,4 +1,5 @@
 import PopupContainer from "src/components/PopupContainer.svelte";
+import "./global.css";
 
 const target = document.getElementById("app");
 
