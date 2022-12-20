@@ -34,6 +34,6 @@
     border: 1px solid #575757;
   }
   .loading {
-    padding: 5px;
+    padding: 10px 10px 15px 10px;
   }
 </style>

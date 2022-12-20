@@ -1,16 +1,18 @@
+import { debounce } from "src/utils/debounce";
 import { log } from "src/utils/logging";
 import { getTwitchUsers } from "src/utils/twitch-api";
 
 let streamerList = [];
+let clearLastDelayedCheck = () => {};
 /**
  * Listen for URL updates, trigger a new check
  */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  // log("updated", tabId, changeInfo, tab);
   log("updated", tab.active, changeInfo.status);
 
   if (tab.active && changeInfo.status === "complete") {
     triggerStreamerCheck(tabId);
+    clearLastDelayedCheck = delayedStreamerCheck(tabId);
   }
 
   return true;
@@ -31,10 +33,19 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
 function triggerStreamerCheck(tabId: number) {
   log("sending check request");
 
+  // Clear any delayed calls before sending a new one
+  clearLastDelayedCheck();
+
   chrome.tabs.sendMessage(tabId, {
     name: "check_for_streamers",
   });
 }
+
+/**
+ * Send a delayed message that triggers a new check.
+ * Race conditions here we come!
+ */
+const delayedStreamerCheck = debounce(triggerStreamerCheck, 2000);
 
 /**
  * Handles messages sent from the popup and inject scripts
@@ -48,7 +59,7 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
       if (message.streamerList.length !== 0) {
         updateIcon(true);
         chrome.action.setBadgeText({
-          text: message.streamerList.length.toString(),
+          text: `${message.streamerList.length}`,
         });
       } else {
         updateIcon(false);
@@ -98,21 +109,5 @@ function updateIcon(showing: boolean) {
   });
 }
 /**
- * on load
- *  0. background is listening for updates from content
- *  1. content sends an update on load
- *
- * on url change
- *  0. background detects a url change
- *  1. background sends a message to content saying "update me"
- *  2. content sends an update
- *
- * on focus change
- *  0. when a new tab is in focus
- *  1. background sends a message to it saying "update me"
- *  2. content sends an update
- *
- *
- *  TODO:
- *  don't do check so often
+ * - update icon to be actually ok
  */
