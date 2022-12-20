@@ -9,7 +9,7 @@
     {
       name: "request_list",
     },
-    async (parsedStreamerList) => {
+    (parsedStreamerList) => {
       log("request_list resp", parsedStreamerList);
       streamerList = parsedStreamerList;
     }
@@ -21,7 +21,7 @@
     {#each streamerList as streamer}
       <Streamer {streamer} />
     {:else}
-      No Twitch streamers detected on this page :(
+      <div class="loading">No Twitch streamers detected on this page :'(</div>
     {/each}
   </div>
 </div>
@@ -32,5 +32,8 @@
     background-color: black;
     padding: 5px 5px 0 5px;
     border: 1px solid #575757;
+  }
+  .loading {
+    padding: 5px;
   }
 </style>
