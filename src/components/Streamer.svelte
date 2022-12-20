@@ -1,12 +1,17 @@
 <script lang="ts">
   import type { TwitchUser } from "src/utils/twitch-api";
 
-  export let streamer: TwitchUser
+  export let streamer: TwitchUser;
 </script>
 
 <div>
-  <a target="_blank" rel="noreferrer" href={`https://www.twitch.tv/${streamer.login}`}>
-    <img src={streamer.profileImageURL} />{streamer.displayName}
+  <a
+    target="_blank"
+    rel="noreferrer"
+    href={`https://www.twitch.tv/${streamer.login}`}
+  >
+    <img src={streamer.profileImageURL} alt="" />
+    {streamer.displayName}
   </a>
   Live: {streamer.stream?.id ? "true" : "false"}
 </div>
