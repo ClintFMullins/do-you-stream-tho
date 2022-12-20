@@ -33,7 +33,8 @@ function getStreamersFromHTML(): string[] {
     .filter((text) => text.includes(TWITCH_URL_FRAGMENT))
     .map((text) => {
       const matches = text.match(/twitch.tv\/\w*/) ?? [];
-      return matches[0].slice(TWITCH_URL_FRAGMENT.length);
+
+      return matches?.[0].slice(TWITCH_URL_FRAGMENT.length) ?? "";
     })
     .filter(uniqueOnly)
     .filter((streamer) => !removeList[streamer]);

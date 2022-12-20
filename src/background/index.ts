@@ -45,7 +45,16 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
       log("background streamer_list", streamerList);
 
       streamerList = message.streamerList;
-      updateIcon(message.streamerList.length !== 0);
+      if (message.streamerList.length !== 0) {
+        updateIcon(true);
+        chrome.action.setBadgeText({
+          text: message.streamerList.length.toString(),
+        });
+      } else {
+        updateIcon(false);
+        chrome.action.setBadgeText({ text: "" });
+      }
+
       return;
     }
     case "request_list": {
