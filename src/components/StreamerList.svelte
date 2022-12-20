@@ -4,14 +4,20 @@
   import type { TwitchUser } from "src/utils/twitch-api";
 
   let streamerList: TwitchUser[] = [];
+  let notFoundList: string[] = [
+    "butt",
+    "crack",
+    "asjd adjs sdjhs djfgh sk fskd fk",
+  ];
 
   chrome.runtime.sendMessage(
     {
       name: "request_list",
     },
-    (parsedStreamerList) => {
-      log("request_list resp", parsedStreamerList);
-      streamerList = parsedStreamerList;
+    (streamers) => {
+      log("request_list resp", streamers);
+      streamerList = streamers.parsed;
+      // notFoundList = streamers.notFound;
     }
   );
 </script>
@@ -23,6 +29,15 @@
     {:else}
       <div class="loading">No Twitch streamers detected on this page :'(</div>
     {/each}
+    <button>check again</button>
+    {#if notFoundList.length !== 0}
+      <div class="oops">
+        Streamers on page that 404'd on lookup:
+        {#each notFoundList as notFound}
+          <div>- {notFound.trim()}</div>
+        {/each}
+      </div>
+    {/if}
   </div>
 </div>
 
@@ -35,5 +50,9 @@
   }
   .loading {
     padding: 10px 10px 15px 10px;
+  }
+
+  .oops {
+    color: grey;
   }
 </style>

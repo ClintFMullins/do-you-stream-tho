@@ -72,17 +72,25 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
       log("background request_list", streamerList);
 
       try {
+        const notFoundStreamers = [];
+
         getTwitchUsers(streamerList)
           .then((streamersData) => {
-            const parsedUsers = streamerList
+            const parsedStreamers = streamerList
               .map((streamer) => {
-                return streamersData.data?.[streamer] ?? null;
+                const streamerData = streamersData.data?.[streamer];
+                if (!streamerData) {
+                  notFoundStreamers.push(streamer);
+                  return null;
+                }
+
+                return streamerData;
               })
               .filter((streamer) => !!streamer);
 
-            log("background request_list resp", parsedUsers);
+            log("background request_list resp", parsedStreamers);
 
-            response(parsedUsers);
+            response({ parsed: parsedStreamers, notFound: notFoundStreamers });
           })
           .catch((err) => {
             throw err;
@@ -110,4 +118,5 @@ function updateIcon(showing: boolean) {
 }
 /**
  * - update icon to be actually ok
+ * - if empty, or been a long time, trigger an update call
  */
