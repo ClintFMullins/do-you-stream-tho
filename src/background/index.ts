@@ -7,6 +7,7 @@ let streamerList = [];
  */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // log("updated", tabId, changeInfo, tab);
+  log("updated", tab.active, changeInfo.status);
 
   if (tab.active && changeInfo.status === "complete") {
     triggerStreamerCheck(tabId);
@@ -51,17 +52,21 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
       log("background request_list", streamerList);
 
       try {
-        getTwitchUsers(streamerList).then((streamersData) => {
-          const parsedUsers = streamerList
-            .map((streamer) => {
-              return streamersData.data[streamer];
-            })
-            .filter((streamer) => !streamer);
+        getTwitchUsers(streamerList)
+          .then((streamersData) => {
+            const parsedUsers = streamerList
+              .map((streamer) => {
+                return streamersData.data[streamer];
+              })
+              .filter((streamer) => !!streamer);
 
-          log("background request_list resp", parsedUsers);
+            log("background request_list resp", parsedUsers);
 
-          response(parsedUsers);
-        });
+            response(parsedUsers);
+          })
+          .catch((err) => {
+            throw err;
+          });
       } catch (err) {
         response([]);
         throw err;

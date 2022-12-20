@@ -24,7 +24,6 @@ chrome.runtime.onMessage.addListener(async (message) => {
 const TWITCH_URL = "https://twitch.tv/";
 
 function getStreamersFromHTML(): string[] {
-  console.log("we trying");
   function uniqueOnly(value, index, self) {
     return self.indexOf(value) === index;
   }

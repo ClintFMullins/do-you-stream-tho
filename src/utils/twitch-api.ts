@@ -1,7 +1,8 @@
-// TODO: now that fetching works, remove a bunch of "return true"
-// from random places
+import { log } from "./logging";
 
 export function getTwitchUsers(users: string[]) {
+  log("getTwitchUsers", users.map(eachUser).join("\n"));
+
   return fetch("https://gql.twitch.tv/gql", {
     method: "POST",
     headers: {
@@ -22,7 +23,6 @@ export interface TwitchUser {
   id: string;
   login: string;
   displayName: string;
-  profile;
   stream: {
     id: string | null;
   };

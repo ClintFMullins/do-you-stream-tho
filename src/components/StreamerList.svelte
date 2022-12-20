@@ -8,7 +8,7 @@
     chrome.runtime.sendMessage({
         name: "request_list",
     }, async (parsedStreamerList) => {
-        log(parsedStreamerList)
+        log("request_list resp", parsedStreamerList)
         streamerList = parsedStreamerList;
     });
 </script>
