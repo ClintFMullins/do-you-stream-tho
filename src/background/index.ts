@@ -4,6 +4,7 @@ import { getTwitchUsers } from "src/utils/twitch-api";
 
 let streamerList = [];
 let clearLastDelayedCheck = () => {};
+let activeTab;
 /**
  * Listen for URL updates, trigger a new check
  */
@@ -22,6 +23,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
  * Listen for active tab updates, trigger a new check
  */
 chrome.tabs.onActivated.addListener((activeInfo) => {
+  activeTab = activeInfo.tabId;
   triggerStreamerCheck(activeInfo.tabId);
 
   return true;
@@ -52,6 +54,9 @@ const delayedStreamerCheck = debounce(triggerStreamerCheck, 2000);
  */
 chrome.runtime.onMessage.addListener((message, _sender, response) => {
   switch (message.name) {
+    case "request_parse": {
+      triggerStreamerCheck(activeTab);
+    }
     case "streamer_list": {
       log("background streamer_list", streamerList);
 
@@ -118,5 +123,4 @@ function updateIcon(showing: boolean) {
 }
 /**
  * - update icon to be actually ok
- * - if empty, or been a long time, trigger an update call
  */
