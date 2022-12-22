@@ -1,10 +1,10 @@
-import PopupContainer from "src/components/PopupContainer.svelte";
+import StreamerList from "src/components/StreamerList.svelte";
 import "./global.css";
 
 const target = document.getElementById("app");
 
 function render() {
-  new PopupContainer({ target });
+  new StreamerList({ target });
 }
 
 document.addEventListener("DOMContentLoaded", render);

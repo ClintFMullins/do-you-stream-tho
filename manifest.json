@@ -26,6 +26,6 @@
     },
     "permissions": ["background"]
   },
-  "permissions": ["storage", "activeTab", "scripting", "background"],
+  "permissions": ["activeTab", "scripting", "background"],
   "host_permissions": ["https://*.youtube.com/"]
 }
