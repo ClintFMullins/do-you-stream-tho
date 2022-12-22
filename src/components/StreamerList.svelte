@@ -38,17 +38,17 @@
     {:else}
       <div class="loading">No Twitch streamers detected on this page :'(</div>
     {/each}
-    <div class="butt-cont">
-      <button on:click={triggerLoop}>check again ↺</button>
-    </div>
     {#if notFoundList.length !== 0}
       <div class="oops">
-        Streamers on page that 404'd on lookup:
+        Potential streamers that 404'd on lookup:
         {#each notFoundList as notFound}
-          <div>- {notFound.trim()}</div>
+          <div>- twitch.tv/{notFound.trim().slice(0, 20)}</div>
         {/each}
       </div>
     {/if}
+    <div class="butt-cont">
+      <button on:click={triggerLoop}>check again ↺</button>
+    </div>
   </div>
 </div>
 
@@ -81,5 +81,6 @@
 
   .oops {
     color: grey;
+    margin: 0 5px 5px 5px;
   }
 </style>

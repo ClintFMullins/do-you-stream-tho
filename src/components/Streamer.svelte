@@ -39,9 +39,9 @@
 
 <style>
   .cont {
-    margin-bottom: 5px;
     opacity: 0.9;
-    padding: 2px;
+    padding: 3px 5px;
+    margin-bottom: 5px;
     border-radius: 3px;
   }
 
