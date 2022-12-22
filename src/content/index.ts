@@ -25,7 +25,7 @@ const TWITCH_URL_FRAGMENT = "twitch.tv/";
 
 /**
  * Using 'a tags' to attempt some validation, that it's not random
- * user comment twitch spam
+ * user comment with twitch link spam
  */
 function getStreamersFromHTML(): string[] {
   return Array.from(document.getElementsByTagName("a"))
@@ -33,8 +33,8 @@ function getStreamersFromHTML(): string[] {
     .filter(uniqueAndValid);
 }
 
-function uniqueAndValid(streamer, index, self) {
-  return !removeList[streamer] && self.indexOf(streamer) === index;
+function uniqueAndValid(streamer: string, idx: number, self: string[]) {
+  return validStreamer(streamer) && self.indexOf(streamer) === idx;
 }
 
 function extractTwitchMatch(link: HTMLAnchorElement) {
@@ -44,7 +44,11 @@ function extractTwitchMatch(link: HTMLAnchorElement) {
   return matches?.[0]?.slice(TWITCH_URL_FRAGMENT.length).toLowerCase() ?? "";
 }
 
-const removeList = {
-  "": true,
-  gql: true,
-};
+function validStreamer(streamer: string) {
+  return !removeList[streamer];
+}
+
+const removeList = ["", "gql", "videos"].reduce((acc, cur) => {
+  acc[cur] = true;
+  return acc;
+}, {});

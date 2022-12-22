@@ -5,6 +5,7 @@ import { getTwitchUsers } from "src/utils/twitch-api";
 let streamerList = [];
 let clearLastDelayedCheck = () => {};
 let activeTab;
+
 /**
  * Listen for URL updates, trigger a new check
  */
@@ -121,6 +122,3 @@ function updateIcon(showing: boolean) {
     path: `src/assets/icons/stream_${showing ? "on" : "off"}_16.png`,
   });
 }
-/**
- * - update icon to be actually ok
- */
