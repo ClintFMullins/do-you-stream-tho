@@ -57,6 +57,7 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
   switch (message.name) {
     case "request_parse": {
       triggerStreamerCheck(activeTab);
+      return true;
     }
     case "streamer_list": {
       log("background streamer_list", streamerList);
@@ -72,7 +73,7 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
         chrome.action.setBadgeText({ text: "" });
       }
 
-      return;
+      return true;
     }
     case "request_list": {
       log("background request_list", streamerList);
@@ -105,6 +106,8 @@ chrome.runtime.onMessage.addListener((message, _sender, response) => {
         response([]);
         throw err;
       }
+
+      return true;
     }
     default: {
       // no-op
