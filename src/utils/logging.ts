@@ -1,6 +1,6 @@
 type mode = "log" | "debug" | "silent";
 
-const MODE: mode = "log";
+const MODE: mode = "silent";
 
 /**
  * So I can change log to debug in one place
