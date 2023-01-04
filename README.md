@@ -1,4 +1,4 @@
-# Do you stream tho
+# Do You Stream Tho
 
 Scrapes the current site you are on and tells you if there are twitch streamer links on the page. Shows you live data when you click it
 
